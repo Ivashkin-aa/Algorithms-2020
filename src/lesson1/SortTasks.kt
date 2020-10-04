@@ -171,7 +171,7 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 99.5
  * 121.3
  */
-//время: O(N^2)
+//время: O(NLogN)
 //память: O(N)
 fun sortTemperatures(inputName: String, outputName: String) {
     val listForMinus = mutableListOf<Double>();
