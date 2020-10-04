@@ -20,9 +20,25 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                      12:40:31 AM
                      07:26:57 AM
                      10:00:03 AM
+                     12:02:36 PM
                      01:15:19 PM
                      01:15:19 PM
                      07:56:14 PM
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTimes("input/time_in4.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                     12:02:36 AM
+                     11:00:00 AM
+                     12:02:36 PM
+                     01:00:35 PM
+                     01:01:35 PM
                 """.trimIndent()
             )
         } finally {
@@ -56,6 +72,20 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     Железнодорожная 3 - Петров Иван
                     Железнодорожная 7 - Иванов Алексей, Иванов Михаил
                     Садовая 5 - Сидоров Петр, Сидорова Мария
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortAddresses("input/addr_in4.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                    Мира 42 - Якунин Семен
+                    Мирный 17 - Якунин Влад
+                    Химиков 70 - Иванов Пётр, Петрова Матрина
+                    Химиков 72 - Павлов Олег
                 """.trimIndent()
             )
         } finally {
@@ -113,6 +143,23 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     24.7
                     99.5
                     121.3
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTemperatures("input/temp_in2.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                    -42.4
+                    -22.2
+                    -12.5
+                    14.2
+                    22.2
+                    44.6
+                    51.0
                 """.trimIndent()
             )
         } finally {

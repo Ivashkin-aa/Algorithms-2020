@@ -2,6 +2,8 @@
 
 package lesson1
 
+import java.io.File
+
 /**
  * Сортировка времён
  *
@@ -32,8 +34,63 @@ package lesson1
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
+//время: O(NLogN)
+//память: O(N)
 fun sortTimes(inputName: String, outputName: String) {
-    TODO()
+    val times = mutableListOf<String>();
+    val result = mutableListOf<Int>();
+    val constForTime = 120000;
+
+    for (line in File(inputName).readLines()) {
+        require(line.matches(Regex("""\d\d:\d\d:\d\d [A|P]M""")));
+        times += line.replace(":", "");
+    }
+    for (time in times) {
+        result += when {
+            time.take(2) == "12" && time.takeLast(2) == "AM" ->
+                time.dropLast(3).toInt() - constForTime;
+            time.take(2) != "12" && time.takeLast(2) == "PM" ->
+                time.dropLast(3).toInt() + constForTime;
+            else -> time.dropLast(3).toInt();
+        }
+    }
+
+    insertionSort(result);
+
+    File(outputName).bufferedWriter().use {
+        for (element in result) {
+            var hours: Int;
+            var min: Int;
+            var sec: Int;
+            val const = 10000;
+            when {
+                element <= constForTime / 20 -> {
+                    hours = 12;
+                    min = element / 100;
+                    sec = element - min * 100;
+                    it.write(String.format("%02d:%02d:%02d", hours, min, sec) + " AM");
+                }
+                element >= (constForTime + const) -> {
+                    hours = (element - constForTime) / const;
+                    min = (element % ((hours + 12) * const)) / 100;
+                    sec = (element % ((hours + 12) * const)) % 100;
+                    it.write(String.format("%02d:%02d:%02d", hours, min, sec) + " PM");
+                }
+                element >= constForTime && element < (constForTime + const) -> {
+                    hours = element / const;
+                    min = (element - hours * const) / 100;
+                    sec = (element - hours * const) - min * 100;
+                    it.write(String.format("%02d:%02d:%02d", hours, min, sec) + " PM");
+                }
+                else -> {
+                    hours = element / const;
+                    min = (element - hours * const) / 100;
+                    sec = (element - hours * const) - min * 100;
+                    it.write(String.format("%02d:%02d:%02d", hours, min, sec) + " AM"); }
+            }
+            it.newLine();
+        }
+    }
 }
 
 /**
@@ -62,8 +119,26 @@ fun sortTimes(inputName: String, outputName: String) {
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
+//время: O(NlogN)
+//память: O(N)
 fun sortAddresses(inputName: String, outputName: String) {
-    TODO()
+    val addr = mutableMapOf<String, List<String>>();
+    for (line in File(inputName).readLines()) {
+        require(line.matches(Regex("""\S+ \S+ - \S+ \d+""")));
+        val del = line.trim().split(" - ");
+        addr[del.last()] = addr.getOrDefault(del.last(), listOf()) + del.first();
+    }
+    val result = addr.keys.sortedWith(
+        compareBy({ it.substringBeforeLast(" ") },
+            { it.substringAfterLast(" ").toInt() })
+    );
+    File(outputName).bufferedWriter().use {
+        for (home in result) {
+            val names = addr[home]!!.sorted().joinToString().trim().replace(" , ", ", ");
+            it.write(home.trim() + " - $names");
+            it.newLine();
+        }
+    }
 }
 
 /**
@@ -96,8 +171,28 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 99.5
  * 121.3
  */
+//время: O(N^2)
+//память: O(N)
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val listForMinus = mutableListOf<Double>();
+    val listForPlus = mutableListOf<Double>();
+    for (line in File(inputName).readLines()) {
+        if (line.contains("-"))
+            listForMinus += line.toDouble();
+        else listForPlus += line.toDouble();
+    }
+    listForMinus.sort();
+    listForPlus.sort();
+    File(outputName).bufferedWriter().use {
+        for (element in listForMinus) {
+            it.write(element.toString());
+            it.newLine()
+        }
+        for (element in listForPlus) {
+            it.write(element.toString());
+            it.newLine();
+        }
+    }
 }
 
 /**
