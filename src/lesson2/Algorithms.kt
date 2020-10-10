@@ -2,6 +2,9 @@
 
 package lesson2
 
+import java.io.File
+
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -26,8 +29,26 @@ package lesson2
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
+//время: O(N^2)
+//память: O(N)
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
-    TODO()
+    var max = 0
+    var maxInd = 0
+    var minInd = 0
+    val list = mutableListOf<Int>()
+    for (line in File(inputName).readLines()) {
+        list += line.toInt()
+    }
+    for (i in list.size - 1 downTo 0) {
+        for (j in i - 1 downTo 0) {
+            if (list[i] - list[j] > max) {
+                max = list[i] - list[j]
+                minInd = j + 1
+                maxInd = i + 1
+            }
+        }
+    }
+    return Pair(minInd, maxInd)
 }
 
 /**
@@ -94,9 +115,31 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  */
+//время: O(mn)
+//память: O(m) , где m - кол-во символов 1 строки, n - кол-во символов 2 строки
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    if (first == "" || second == "")
+        return ""
+    var max = 0
+    var maxIndex = 0
+    val matrix = Array(first.length + 1) { IntArray(second.length + 1) }
+    for (i in first.indices) {
+        for (j in second.indices) {
+            if (first[i] == second[j]) {
+                if (i != 0 && j != 0 && matrix[i - 1][j - 1] != 0) {
+                    matrix[i][j] = matrix[i - 1][j - 1] + 1
+                    if (max < matrix[i][j]) {
+                        max = matrix[i][j]
+                        maxIndex = i
+                    }
+                } else
+                    matrix[i][j] = 1
+            }
+        }
+    }
+    return first.substring(maxIndex + 1 - max, maxIndex + 1)
 }
+
 
 /**
  * Число простых чисел в интервале
@@ -108,6 +151,19 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Справка: простым считается число, которое делится нацело только на 1 и на себя.
  * Единица простым числом не считается.
  */
+//время: O(NLog(LogN))
+//память: O(N)
 fun calcPrimesNumber(limit: Int): Int {
-    TODO()
+    if (limit <= 1)
+        return 0
+    val list = MutableList(limit + 1) { it }
+    list[1] = 0
+    for (p in 2..limit) {
+        if (list[p] != 0) {
+            for (i in (2 * p)..limit step p) {
+                list[i] = 0
+            }
+        }
+    }
+    return list.filter { it != 0 }.size
 }
