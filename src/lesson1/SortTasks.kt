@@ -171,25 +171,24 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 99.5
  * 121.3
  */
-//время: O(NLogN)
+//время: O(N)
 //память: O(N)
 fun sortTemperatures(inputName: String, outputName: String) {
-    val listForMinus = mutableListOf<Double>()
-    val listForPlus = mutableListOf<Double>()
+    val max = 5000
+    val min = 2730
+    val list = mutableListOf<Int>()
     for (line in File(inputName).readLines()) {
-        if (line.contains("-"))
-            listForMinus += line.toDouble()
-        else listForPlus += line.toDouble()
+        list.add((line.toDouble() * 10 + min).toInt())
     }
-    listForMinus.sort()
-    listForPlus.sort()
+    val temp = countingSort(list.toIntArray(), min + max)
     File(outputName).bufferedWriter().use {
-        for (element in listForMinus) {
-            it.write(element.toString())
-            it.newLine()
-        }
-        for (element in listForPlus) {
-            it.write(element.toString())
+        for (element in temp) {
+            val t = (element - min).toString()
+            if (t.length == 1)
+                it.write("0.$t")
+            else if (t.length == 2 && t.first() == '-')
+                it.write(t.first() + "0." + t.last())
+            else it.write(t.dropLast(1) + "." + t.takeLast(1))
             it.newLine()
         }
     }
