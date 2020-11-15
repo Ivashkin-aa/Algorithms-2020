@@ -2,6 +2,8 @@
 
 package lesson6
 
+import lesson6.impl.GraphBuilder
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -60,8 +62,27 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
  * |
  * J ------------ K
  */
+//время: O(Vert + Edge)
+//память: O(Vert + Edge)
 fun Graph.minimumSpanningTree(): Graph {
-    TODO()
+    val vertex = mutableListOf<Graph.Vertex>()
+    val graph = GraphBuilder()
+    for (edge in edges) {
+        if (!vertex.contains(edge.begin) || !vertex.contains(edge.end) || !vertex.containsAll(
+                listOf(
+                    edge.begin,
+                    edge.end
+                )
+            )
+        ) {
+            vertex.add(edge.begin)
+            vertex.add(edge.end)
+            graph.addVertex(edge.begin)
+            graph.addVertex(edge.end)
+            graph.addConnection(edge.begin, edge.end)
+        }
+    }
+    return graph.build()
 }
 
 /**
@@ -90,8 +111,34 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
+//время: O(Vert + Edge)
+//память: O(Vert + Edge)
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+    val connection = mutableMapOf<Graph.Vertex, MutableSet<Graph.Vertex>>()
+    for (vertex in vertices)
+        connection[vertex] = getNeighbors(vertex)
+    var maxNeighbours = 0
+    for (key in connection.keys)
+        if (maxNeighbours < connection[key]?.size ?: 0)
+            maxNeighbours = connection[key]?.size ?: 0
+    val reverseVertex = vertices.reversed().toMutableSet()
+    while (maxNeighbours > 0) {
+        val listForRemove = mutableListOf<Graph.Vertex>()
+        for (vertex in reverseVertex) {
+            if (connection[vertex]!!.size == maxNeighbours) {
+                listForRemove.add(vertex)
+                connection.remove(vertex)
+                for (neighbours in getNeighbors(vertex))
+                    connection[neighbours]?.minusAssign(vertex)
+                break
+            }
+        }
+        for (vertex in listForRemove)
+            reverseVertex -= vertex
+        if (listForRemove.size == 0)
+            maxNeighbours--
+    }
+    return reverseVertex
 }
 
 /**
