@@ -125,7 +125,7 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
     while (maxNeighbours > 0) {
         val listForRemove = mutableListOf<Graph.Vertex>()
         for (vertex in reverseVertex) {
-            if (connection[vertex]!!.size == maxNeighbours) {
+            if (connection[vertex]?.size == maxNeighbours) {
                 listForRemove.add(vertex)
                 connection.remove(vertex)
                 for (neighbours in getNeighbors(vertex))
