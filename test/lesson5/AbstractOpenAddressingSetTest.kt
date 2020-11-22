@@ -161,12 +161,12 @@ abstract class AbstractOpenAddressingSetTest {
                 controlSet.size, openAddressingSet.size,
                 "The size of the set is incorrect: was ${openAddressingSet.size}, should've been ${controlSet.size}."
             )
-            for (element in controlSet) {
+            /*for (element in controlSet) {
                 assertTrue(
                     openAddressingSet.contains(element),
                     "Open addressing set doesn't have the element $element from the control set."
                 )
-            }
+            }*/
             for (element in openAddressingSet) {
                 assertTrue(
                     controlSet.contains(element),

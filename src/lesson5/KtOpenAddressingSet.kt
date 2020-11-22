@@ -90,6 +90,53 @@ class KtOpenAddressingSet<T : Any>(private val bits: Int) : AbstractMutableSet<T
      * Средняя (сложная, если поддержан и remove тоже)
      */
     override fun iterator(): MutableIterator<T> {
-        TODO("not implemented")
+        return OpenAddressingSetIterator()
     }
+
+    inner class OpenAddressingSetIterator<T> internal constructor() : MutableIterator<T> {
+        private var curInd = 0
+        private var nextInd = 0
+        private var curElement: T? = null
+
+        init {
+            con()
+        }
+
+        private fun con() {
+            while (nextInd != capacity) {
+                if (storage[nextInd] == null) {
+                    nextInd++
+                } else
+                    break
+            }
+        }
+
+        //время: O(1)
+        //память: O(1)
+        override fun hasNext(): Boolean {
+            return nextInd < capacity
+        }
+
+        //время: O(n) , где n = capacity
+        //память: O(1)
+        override fun next(): T {
+            if (!hasNext())
+                throw IllegalStateException()
+            curElement = storage[nextInd] as T
+            curInd = nextInd
+            nextInd++
+            con()
+            return curElement as T
+        }
+
+        //время: O(1)
+        //память: O(1)
+        override fun remove() {
+            if (curElement == null)
+                throw IllegalStateException()
+            storage[curInd] = null
+            size--
+        }
+    }
+
 }
