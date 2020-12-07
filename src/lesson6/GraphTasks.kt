@@ -62,15 +62,15 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
  * |
  * J ------------ K
  */
-//время: O(Edges)
+//время: O(Vert*Edges)
 //память: O(Vert + Edges)
 fun Graph.minimumSpanningTree(): Graph {
-    val vertex = mutableListOf<Graph.Vertex>()
+    val vertices = mutableListOf<Graph.Vertex>()
     val graph = GraphBuilder()
     for (edge in edges) {
-        if (!vertex.contains(edge.begin) || !vertex.contains(edge.end)) {
-            vertex.add(edge.begin)
-            vertex.add(edge.end)
+        if (!vertices.contains(edge.begin) || !vertices.contains(edge.end)) {
+            vertices.add(edge.begin)
+            vertices.add(edge.end)
             graph.addVertex(edge.begin)
             graph.addVertex(edge.end)
             graph.addConnection(edge.begin, edge.end)
