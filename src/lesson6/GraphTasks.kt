@@ -62,7 +62,7 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
  * |
  * J ------------ K
  */
-//время: O(Vert*Edges)
+//время: O(Vert * Edges)
 //память: O(Vert + Edges)
 fun Graph.minimumSpanningTree(): Graph {
     val vertices = mutableListOf<Graph.Vertex>()
@@ -105,7 +105,7 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
-//время: O(Vert)
+//время: O(Vert + Edges)
 //память: O(Vert)
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
     val connection = mutableMapOf<Graph.Vertex, MutableSet<Graph.Vertex>>()
